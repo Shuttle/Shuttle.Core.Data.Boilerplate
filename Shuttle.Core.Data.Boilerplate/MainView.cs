@@ -39,12 +39,14 @@ namespace Shuttle.Core.Data.Boilerplate
                 return;
             }
 
+            _tables.Clear();
+
             using (_databaseContextFactory.Create("System.Data.SqlClient", ConnectionString.Text))
             {
                 foreach (
                     var row in
                     _databaseGateway.GetRowsUsing(
-                        RawQuery.Create("select TABLE_NAME from  INFORMATION_SCHEMA.TABLES order by 1")))
+                        RawQuery.Create("select TABLE_NAME from INFORMATION_SCHEMA.TABLES order by 1")))
                 {
                     _tables.Add(row[0].ToString());
                 }
@@ -85,6 +87,12 @@ namespace Shuttle.Core.Data.Boilerplate
                 case "mapfrom":
                 {
                     GenerateMapFrom();
+
+                    break;
+                }
+                case "propertymappedfrom":
+                {
+                    GeneratePropertyMappedFrom();
 
                     break;
                 }
@@ -160,6 +168,18 @@ namespace Shuttle.Core.Data.Boilerplate
             Result.Text = result.ToString();
         }
 
+        private void GeneratePropertyMappedFrom()
+        {
+            var result = new StringBuilder();
+
+            foreach (var column in GetColumns())
+            {
+                result.AppendLine($"{column.MappedName()} = {column.ColumnsClassName(ClassName())}.{column.MappedName()}.MapFrom(row),");
+            }
+
+            Result.Text = result.ToString();
+        }
+
         private void GenerateMapFrom()
         {
             var result = new StringBuilder();
@@ -209,10 +229,9 @@ namespace Shuttle.Core.Data.Boilerplate
             var result = new StringBuilder();
             var values = new StringBuilder();
 
-            result.AppendLine("\t\tGuard.AgainstNull(auditInformation, nameof(auditInformation));");
             result.AppendLine($"\t\tGuard.AgainstNull({ObjectName()}, nameof({ObjectName()}));");
             result.AppendLine();
-            result.AppendLine("\t\tvar query = RawQuery.Create(@\"");
+            result.AppendLine("\t\treturn RawQuery.Create(@\"");
             result.AppendLine($"insert into {Table.Text}");
             result.AppendLine("(");
 
@@ -220,10 +239,10 @@ namespace Shuttle.Core.Data.Boilerplate
 
             foreach (var column in columns)
             {
-                if (column.OrdinalPosition == 1)
-                {
-                    continue;
-                }
+                //if (column.OrdinalPosition == 1)
+                //{
+                //    continue;
+                //}
 
                 result.AppendLine(
                     $"\t{column.ColumnName}{(column.OrdinalPosition < columns.Count ? "," : string.Empty)}");
@@ -237,10 +256,8 @@ namespace Shuttle.Core.Data.Boilerplate
             result.AppendLine("(");
             result.Append(values);
             result.AppendLine(");");
-            result.AppendLine("select cast(scope_identity() as int);");
-            result.AppendLine("\");");
-            result.AppendLine();
-            result.AppendLine("\t\tquery");
+            //result.AppendLine("select cast(scope_identity() as int);");
+            result.AppendLine("\")");
 
             foreach (var column in columns)
             {
@@ -248,9 +265,6 @@ namespace Shuttle.Core.Data.Boilerplate
                     column.ColumnsClassName(ClassName()), column.MappedName(), ObjectName(),
                     column.OrdinalPosition < columns.Count ? string.Empty : ";"));
             }
-
-            result.AppendLine();
-            result.AppendLine("return query;");
 
             Result.Text = result.ToString();
         }
@@ -261,10 +275,9 @@ namespace Shuttle.Core.Data.Boilerplate
 
             Column primary = null;
 
-            result.AppendLine("\t\tGuard.AgainstNull(auditInformation, nameof(auditInformation));");
             result.AppendLine($"\t\tGuard.AgainstNull({ObjectName()}, nameof({ObjectName()}));");
             result.AppendLine();
-            result.AppendLine("\t\tvar query = RawQuery.Create(@\"");
+            result.AppendLine("\t\treturn RawQuery.Create(@\"");
             result.AppendLine("update");
             result.AppendLine($"\t{Table.Text}");
             result.AppendLine("set");
@@ -286,9 +299,7 @@ namespace Shuttle.Core.Data.Boilerplate
 
             result.AppendLine("where");
             result.AppendLine(string.Format("\t{0} = @{0}", primary.ColumnName));
-            result.AppendLine("\");");
-            result.AppendLine();
-            result.AppendLine("\t\tquery");
+            result.AppendLine("\")");
 
             foreach (var column in columns)
             {
@@ -296,9 +307,6 @@ namespace Shuttle.Core.Data.Boilerplate
                     column.ColumnsClassName(ClassName()), column.MappedName(), ObjectName(),
                     column.OrdinalPosition < columns.Count ? string.Empty : ";"));
             }
-
-            result.AppendLine();
-            result.AppendLine("return query;");
 
             Result.Text = result.ToString();
         }
