@@ -120,16 +120,22 @@ namespace Shuttle.Core.Data.Boilerplate
 
                     break;
                 }
-                case "queryclass":
+                case "properties":
                 {
-                    GenerateQueryClass();
+                    GenerateProperties();
+
+                    break;
+                }
+                case "arguments":
+                {
+                    GenerateArguments();
 
                     break;
                 }
             }
         }
 
-        private void GenerateQueryClass()
+        private void GenerateProperties()
         {
             var result = new StringBuilder();
 
@@ -137,6 +143,19 @@ namespace Shuttle.Core.Data.Boilerplate
             {
                 result.AppendLine(
                     $"public {column.Nullable(column.CSharpTypeName())} {column.MappedName()} {{ get; set; }}");
+            }
+
+            Result.Text = result.ToString();
+        }
+
+        private void GenerateArguments()
+        {
+            var result = new StringBuilder();
+
+            foreach (var column in GetColumns())
+            {
+                result.Append(
+                    $"{column.Nullable(column.CSharpTypeName())} {column.MappedName()},");
             }
 
             Result.Text = result.ToString();
@@ -261,9 +280,7 @@ namespace Shuttle.Core.Data.Boilerplate
 
             foreach (var column in columns)
             {
-                result.AppendLine(string.Format("\t\t\t.AddParameterValue({0}.{1}, {2}.{1}){3}",
-                    column.ColumnsClassName(ClassName()), column.MappedName(), ObjectName(),
-                    column.OrdinalPosition < columns.Count ? string.Empty : ";"));
+                result.AppendLine($"\t\t\t.AddParameterValue(Columns.{column.MappedName()}, {ObjectName()}.{column.MappedName()}){(column.OrdinalPosition < columns.Count ? string.Empty : "; ")}");
             }
 
             Result.Text = result.ToString();

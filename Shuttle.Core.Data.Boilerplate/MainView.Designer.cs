@@ -88,7 +88,8 @@
             "Select",
             "Insert",
             "Update",
-            "QueryClass"});
+            "Properties",
+            "Arguments"});
             this.GenerateOption.Location = new System.Drawing.Point(15, 179);
             this.GenerateOption.Name = "GenerateOption";
             this.GenerateOption.Size = new System.Drawing.Size(438, 21);
@@ -168,7 +169,7 @@
             "ObjectName",
             "*Columns"});
             this.Copy.Location = new System.Drawing.Point(467, 180);
-            this.Copy.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Copy.Margin = new System.Windows.Forms.Padding(2);
             this.Copy.Name = "Copy";
             this.Copy.Size = new System.Drawing.Size(211, 21);
             this.Copy.TabIndex = 10;
