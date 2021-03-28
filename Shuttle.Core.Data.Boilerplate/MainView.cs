@@ -155,7 +155,7 @@ namespace Shuttle.Core.Data.Boilerplate
             foreach (var column in GetColumns())
             {
                 result.Append(
-                    $"{column.Nullable(column.CSharpTypeName())} {column.MappedName()},");
+                    $"{column.Nullable(column.CSharpTypeName())} {column.MappedName(true)},");
             }
 
             Result.Text = result.ToString();

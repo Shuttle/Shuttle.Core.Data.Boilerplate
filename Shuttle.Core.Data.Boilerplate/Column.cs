@@ -58,13 +58,20 @@ namespace Shuttle.Core.Data.Boilerplate
             return SystemType().Name;
         }
 
-        public string MappedName()
+        public string MappedName(bool camelCase = false)
         {
-            return (OrdinalPosition == 1 && ColumnName.EndsWith("_ID")
+            var result = (OrdinalPosition == 1 && ColumnName.EndsWith("_ID")
                 ? "Id"
                 : (ColumnName.EndsWith("ID")
                     ? string.Concat(ColumnName.Substring(0, ColumnName.Length - 2), "Id")
                     : ColumnName)).Replace("_", string.Empty);
+
+            if (camelCase)
+            {
+                return $"{result.Substring(0, 1).ToLower()}{result.Substring(1)}";
+            }
+
+            return result;
         }
 
         public string DbType()
