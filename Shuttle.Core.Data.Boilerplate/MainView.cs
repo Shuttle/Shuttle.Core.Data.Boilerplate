@@ -132,7 +132,30 @@ namespace Shuttle.Core.Data.Boilerplate
 
                     break;
                 }
+                case "object":
+                {
+                    GenerateObject();
+
+                    break;
+                }
             }
+        }
+
+        private void GenerateObject()
+        {
+            var result = new StringBuilder();
+
+            result.AppendLine($"new {ClassName()} {{");
+
+            foreach (var column in GetColumns())
+            {
+                result.AppendLine(
+                    $"{column.MappedName()} = {column.MappedName(true)},");
+            }
+
+            result.AppendLine("}");
+
+            Result.Text = result.ToString();
         }
 
         private void GenerateProperties()

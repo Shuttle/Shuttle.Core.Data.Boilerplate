@@ -89,7 +89,8 @@
             "Insert",
             "Update",
             "Properties",
-            "Arguments"});
+            "Arguments",
+            "Object"});
             this.GenerateOption.Location = new System.Drawing.Point(15, 179);
             this.GenerateOption.Name = "GenerateOption";
             this.GenerateOption.Size = new System.Drawing.Size(438, 21);
