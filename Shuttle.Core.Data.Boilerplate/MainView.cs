@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Shuttle.Core.Reflection;
 
 namespace Shuttle.Core.Data.Boilerplate
 {
@@ -22,6 +24,7 @@ namespace Shuttle.Core.Data.Boilerplate
         private readonly IDatabaseContextFactory _databaseContextFactory;
         private readonly IDatabaseGateway _databaseGateway;
         private readonly List<string> _tables = new List<string>();
+        private readonly string _connectionStringPath;
 
         public MainView()
         {
@@ -30,6 +33,13 @@ namespace Shuttle.Core.Data.Boilerplate
             _databaseContextFactory = new DatabaseContextFactory(new ConnectionConfigurationProvider(),  new DbConnectionFactory(), new DbCommandFactory(),
                 new ThreadStaticDatabaseContextCache());
             _databaseGateway = new DatabaseGateway();
+
+            _connectionStringPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ".connection-string");
+
+            if (File.Exists(_connectionStringPath))
+            {
+                ConnectionString.Text = File.ReadAllText(_connectionStringPath);
+            }
         }
 
         private void Connect()
@@ -41,18 +51,37 @@ namespace Shuttle.Core.Data.Boilerplate
 
             _tables.Clear();
 
-            using (_databaseContextFactory.Create("System.Data.SqlClient", ConnectionString.Text))
+            try
             {
-                foreach (
-                    var row in
-                    _databaseGateway.GetRowsUsing(
-                        RawQuery.Create("select TABLE_NAME from INFORMATION_SCHEMA.TABLES order by 1")))
+                using (_databaseContextFactory.Create("System.Data.SqlClient", ConnectionString.Text))
                 {
-                    _tables.Add(row[0].ToString());
+                    foreach (
+                        var row in
+                        _databaseGateway.GetRowsUsing(
+                            RawQuery.Create("select TABLE_NAME from INFORMATION_SCHEMA.TABLES order by 1")))
+                    {
+                        _tables.Add(row[0].ToString());
+                    }
                 }
-            }
 
-            FilterTables();
+                FilterTables();
+
+                SaveConnectionString();
+            }
+            catch (Exception ex)
+            {
+                ShowMessage(ex.AllMessages());
+            }
+        }
+
+        private void ShowMessage(string message)
+        {
+            MessageBox.Show(message, @"Message", MessageBoxButtons.OK);
+        }
+
+        private void SaveConnectionString()
+        {
+            File.WriteAllText(_connectionStringPath, ConnectionString.Text);
         }
 
         private void Table_SelectedIndexChanged(object sender, EventArgs e)
