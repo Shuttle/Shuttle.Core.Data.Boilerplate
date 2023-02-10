@@ -47,9 +47,10 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(15, 114);
+            this.label1.Location = new System.Drawing.Point(18, 132);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(34, 13);
+            this.label1.Size = new System.Drawing.Size(34, 15);
             this.label1.TabIndex = 2;
             this.label1.Text = "Table";
             // 
@@ -59,18 +60,20 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.Table.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.Table.FormattingEnabled = true;
-            this.Table.Location = new System.Drawing.Point(15, 130);
+            this.Table.Location = new System.Drawing.Point(18, 150);
+            this.Table.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Table.Name = "Table";
-            this.Table.Size = new System.Drawing.Size(753, 21);
+            this.Table.Size = new System.Drawing.Size(878, 23);
             this.Table.TabIndex = 3;
             this.Table.SelectedIndexChanged += new System.EventHandler(this.Table_SelectedIndexChanged);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 162);
+            this.label2.Location = new System.Drawing.Point(14, 187);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(51, 13);
+            this.label2.Size = new System.Drawing.Size(54, 15);
             this.label2.TabIndex = 4;
             this.label2.Text = "Generate";
             // 
@@ -81,8 +84,8 @@
             this.GenerateOption.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.GenerateOption.FormattingEnabled = true;
             this.GenerateOption.Items.AddRange(new object[] {
-            "MappedColumns",
-            "MapFrom",
+            "Columns",
+            "Value",
             "PropertyMappedFrom",
             "Contains",
             "Select",
@@ -91,18 +94,20 @@
             "Properties",
             "Arguments",
             "Object"});
-            this.GenerateOption.Location = new System.Drawing.Point(15, 179);
+            this.GenerateOption.Location = new System.Drawing.Point(18, 207);
+            this.GenerateOption.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.GenerateOption.Name = "GenerateOption";
-            this.GenerateOption.Size = new System.Drawing.Size(438, 21);
+            this.GenerateOption.Size = new System.Drawing.Size(510, 23);
             this.GenerateOption.TabIndex = 5;
             this.GenerateOption.SelectedIndexChanged += new System.EventHandler(this.GenerateOption_SelectedIndexChanged);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(15, 211);
+            this.label3.Location = new System.Drawing.Point(18, 243);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(32, 13);
+            this.label3.Size = new System.Drawing.Size(35, 15);
             this.label3.TabIndex = 6;
             this.label3.Text = "Code";
             // 
@@ -111,20 +116,22 @@
             this.Result.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.Result.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Result.Location = new System.Drawing.Point(15, 228);
+            this.Result.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.Result.Location = new System.Drawing.Point(18, 263);
+            this.Result.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Result.Multiline = true;
             this.Result.Name = "Result";
             this.Result.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.Result.Size = new System.Drawing.Size(754, 362);
+            this.Result.Size = new System.Drawing.Size(879, 417);
             this.Result.TabIndex = 8;
             // 
             // CopyButton
             // 
             this.CopyButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.CopyButton.Location = new System.Drawing.Point(692, 173);
+            this.CopyButton.Location = new System.Drawing.Point(807, 200);
+            this.CopyButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.CopyButton.Name = "CopyButton";
-            this.CopyButton.Size = new System.Drawing.Size(75, 32);
+            this.CopyButton.Size = new System.Drawing.Size(88, 37);
             this.CopyButton.TabIndex = 7;
             this.CopyButton.Text = "copy";
             this.CopyButton.UseVisualStyleBackColor = true;
@@ -133,9 +140,10 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(15, 65);
+            this.label4.Location = new System.Drawing.Point(18, 75);
+            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(29, 13);
+            this.label4.Size = new System.Drawing.Size(33, 15);
             this.label4.TabIndex = 0;
             this.label4.Text = "Filter";
             // 
@@ -143,9 +151,10 @@
             // 
             this.Filter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.Filter.Location = new System.Drawing.Point(15, 81);
+            this.Filter.Location = new System.Drawing.Point(18, 93);
+            this.Filter.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Filter.Name = "Filter";
-            this.Filter.Size = new System.Drawing.Size(753, 20);
+            this.Filter.Size = new System.Drawing.Size(878, 23);
             this.Filter.TabIndex = 1;
             this.Filter.TextChanged += new System.EventHandler(this.Filter_TextChanged);
             // 
@@ -153,9 +162,10 @@
             // 
             this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(466, 163);
+            this.label5.Location = new System.Drawing.Point(544, 188);
+            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(31, 13);
+            this.label5.Size = new System.Drawing.Size(35, 15);
             this.label5.TabIndex = 9;
             this.label5.Text = "Copy";
             // 
@@ -169,10 +179,10 @@
             "ClassName",
             "ObjectName",
             "*Columns"});
-            this.Copy.Location = new System.Drawing.Point(467, 180);
+            this.Copy.Location = new System.Drawing.Point(545, 208);
             this.Copy.Margin = new System.Windows.Forms.Padding(2);
             this.Copy.Name = "Copy";
-            this.Copy.Size = new System.Drawing.Size(211, 21);
+            this.Copy.Size = new System.Drawing.Size(245, 23);
             this.Copy.TabIndex = 10;
             this.Copy.SelectedIndexChanged += new System.EventHandler(this.Copy_SelectedIndexChanged);
             // 
@@ -180,27 +190,30 @@
             // 
             this.ConnectionString.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.ConnectionString.Location = new System.Drawing.Point(15, 32);
+            this.ConnectionString.Location = new System.Drawing.Point(18, 37);
+            this.ConnectionString.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.ConnectionString.Name = "ConnectionString";
-            this.ConnectionString.Size = new System.Drawing.Size(661, 20);
+            this.ConnectionString.Size = new System.Drawing.Size(770, 23);
             this.ConnectionString.TabIndex = 12;
             this.ConnectionString.Text = "data source=.\\sqlexpress;initial catalog=database;integrated security=true";
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(15, 16);
+            this.label6.Location = new System.Drawing.Point(18, 18);
+            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(202, 13);
+            this.label6.Size = new System.Drawing.Size(228, 15);
             this.label6.TabIndex = 11;
             this.label6.Text = "Connection string (System.Data.SqlClient)";
             // 
             // ConnectButton
             // 
             this.ConnectButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ConnectButton.Location = new System.Drawing.Point(690, 25);
+            this.ConnectButton.Location = new System.Drawing.Point(805, 29);
+            this.ConnectButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.ConnectButton.Name = "ConnectButton";
-            this.ConnectButton.Size = new System.Drawing.Size(75, 32);
+            this.ConnectButton.Size = new System.Drawing.Size(88, 37);
             this.ConnectButton.TabIndex = 13;
             this.ConnectButton.Text = "connect";
             this.ConnectButton.UseVisualStyleBackColor = true;
@@ -208,9 +221,9 @@
             // 
             // MainView
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(783, 607);
+            this.ClientSize = new System.Drawing.Size(913, 700);
             this.Controls.Add(this.ConnectButton);
             this.Controls.Add(this.ConnectionString);
             this.Controls.Add(this.label6);
@@ -225,7 +238,8 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.Table);
             this.Controls.Add(this.label1);
-            this.MinimumSize = new System.Drawing.Size(799, 646);
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.MinimumSize = new System.Drawing.Size(929, 739);
             this.Name = "MainView";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Shuttle.Core.Data.Boilerplate";
