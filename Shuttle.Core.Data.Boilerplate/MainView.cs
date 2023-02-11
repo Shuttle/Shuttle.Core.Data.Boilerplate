@@ -73,7 +73,7 @@ public partial class MainView : Form
 
         try
         {
-            using (_databaseContextFactory.Create("Microsoft.Data.SqlClient", ConnectionString.Text))
+            using (await _databaseContextFactory.Create("Microsoft.Data.SqlClient", ConnectionString.Text))
             {
                 foreach (
                     var row in
@@ -462,7 +462,7 @@ public partial class MainView : Form
             return result;
         }
 
-        using (_databaseContextFactory.Create("Microsoft.Data.SqlClient", ConnectionString.Text))
+        using (await _databaseContextFactory.Create("Microsoft.Data.SqlClient", ConnectionString.Text))
         {
             foreach (
                 var row in

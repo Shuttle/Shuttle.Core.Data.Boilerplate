@@ -41,10 +41,10 @@ namespace Shuttle.Core.Data.Boilerplate
         {
             Guard.AgainstNull(row, "row");
 
-            _dataType = Columns.DataType.MapFrom(row);
-            ColumnName = Columns.ColumnName.MapFrom(row);
-            IsNullable = Columns.IsNullable.MapFrom(row).Equals("YES", StringComparison.InvariantCultureIgnoreCase);
-            OrdinalPosition = Columns.OrdinalPosition.MapFrom(row);
+            _dataType = Columns.DataType.Value(row);
+            ColumnName = Columns.ColumnName.Value(row);
+            IsNullable = Columns.IsNullable.Value(row).Equals("YES", StringComparison.InvariantCultureIgnoreCase);
+            OrdinalPosition = Columns.OrdinalPosition.Value(row);
         }
 
         public string ColumnName { get; }
