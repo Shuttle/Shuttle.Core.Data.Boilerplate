@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Data.Common;
+using System.Runtime.Versioning;
 using System.Windows.Forms;
 using Microsoft.Data.SqlClient;
 
 namespace Shuttle.Core.Data.Boilerplate
 {
+    [SupportedOSPlatform("Windows")]
     static class Program
     {
         /// <summary>
@@ -15,9 +17,7 @@ namespace Shuttle.Core.Data.Boilerplate
         {
             DbProviderFactories.RegisterFactory("Microsoft.Data.SqlClient", SqlClientFactory.Instance);
 
-            Application.EnableVisualStyles();
-            Application.SetHighDpiMode(HighDpiMode.SystemAware);
-            Application.SetCompatibleTextRenderingDefault(false);
+            ApplicationConfiguration.Initialize();
             Application.Run(new MainView());
         }
     }

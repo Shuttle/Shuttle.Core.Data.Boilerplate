@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Versioning;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Data.SqlClient;
 
 namespace Shuttle.Core.Data.Boilerplate;
 
+[SupportedOSPlatform("Windows")]
 public partial class MainView : Form
 {
     internal static readonly Dictionary<string, List<string>> ColumnMapping = new Dictionary<string, List<string>>
@@ -24,22 +26,11 @@ public partial class MainView : Form
 
     private readonly string _connectionStringPath;
 
-    private readonly IDatabaseContextFactory _databaseContextFactory;
-    private readonly IDatabaseGateway _databaseGateway;
     private readonly List<string> _tables = new List<string>();
 
     public MainView()
     {
         InitializeComponent();
-
-        var services = new ServiceCollection();
-
-        services.AddDataAccess();
-
-        var provider = services.BuildServiceProvider();
-
-        _databaseContextFactory = provider.GetRequiredService<IDatabaseContextFactory>();
-        _databaseGateway = provider.GetRequiredService<IDatabaseGateway>();
 
         _connectionStringPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ".connection-string");
 
@@ -73,13 +64,20 @@ public partial class MainView : Form
 
         try
         {
-            using (await _databaseContextFactory.Create("Microsoft.Data.SqlClient", ConnectionString.Text))
+            await using (var connection = new SqlConnection(ConnectionString.Text))
+            await using (var command = connection.CreateCommand())
             {
-                foreach (
-                    var row in
-                    await _databaseGateway.GetRows("select TABLE_NAME from INFORMATION_SCHEMA.TABLES order by 1"))
+                connection.Open();
+
+                command.CommandText = "select TABLE_NAME from INFORMATION_SCHEMA.TABLES order by 1";
+                command.CommandType = System.Data.CommandType.Text;
+
+                await using (var reader = await command.ExecuteReaderAsync())
                 {
-                    _tables.Add(row[0].ToString());
+                    while(await reader.ReadAsync())
+                    {
+                        _tables.Add(reader[0].ToString());
+                    }
                 }
             }
 
@@ -462,13 +460,25 @@ public partial class MainView : Form
             return result;
         }
 
-        using (await _databaseContextFactory.Create("Microsoft.Data.SqlClient", ConnectionString.Text))
+        await using (var connection = new SqlConnection(ConnectionString.Text))
+        await using (var command = connection.CreateCommand())
         {
-            foreach (
-                var row in
-                await _databaseGateway.GetRows($"select COLUMN_NAME, DATA_TYPE, IS_NULLABLE, ORDINAL_POSITION from  INFORMATION_SCHEMA.COLUMNS where TABLE_NAME = '{Table.Text}' order by ORDINAL_POSITION"))
+            connection.Open();
+
+            command.CommandText = $"select COLUMN_NAME, DATA_TYPE, IS_NULLABLE, ORDINAL_POSITION from  INFORMATION_SCHEMA.COLUMNS where TABLE_NAME = '{Table.Text}' order by ORDINAL_POSITION";
+            command.CommandType = System.Data.CommandType.Text;
+
+            await using (var reader = await command.ExecuteReaderAsync())
             {
-                result.Add(new Column(row));
+                while (await reader.ReadAsync())
+                {
+                    var columnName = reader.GetString(0);
+                    var dataType = reader.GetString(1);
+                    var isNullable = reader.GetString(2).Equals("YES", StringComparison.InvariantCultureIgnoreCase);
+                    var ordinalPosition = reader.GetInt32(3);
+
+                    result.Add(new Column(columnName, dataType, isNullable, ordinalPosition));
+                }
             }
         }
 

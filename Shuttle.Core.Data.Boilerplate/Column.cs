@@ -3,12 +3,12 @@ using System.CodeDom;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Reflection;
+using System.Runtime.Versioning;
 using Microsoft.CSharp;
-using Shuttle.Core.Contract;
 
 namespace Shuttle.Core.Data.Boilerplate
 {
+    [SupportedOSPlatform("Windows")]
     public class Column
     {
         private readonly Dictionary<DbType, Type> _dbTypeMap = new()
@@ -37,14 +37,12 @@ namespace Shuttle.Core.Data.Boilerplate
 
         private readonly string _dataType;
 
-        public Column(DataRow row)
+        public Column(string columnName, string dataType, bool isNullable, int ordinalPosition)
         {
-            Guard.AgainstNull(row, "row");
-
-            _dataType = Columns.DataType.Value(row);
-            ColumnName = Columns.ColumnName.Value(row);
-            IsNullable = Columns.IsNullable.Value(row).Equals("YES", StringComparison.InvariantCultureIgnoreCase);
-            OrdinalPosition = Columns.OrdinalPosition.Value(row);
+            _dataType = dataType;
+            ColumnName = columnName;
+            IsNullable = isNullable;
+            OrdinalPosition = ordinalPosition;
         }
 
         public string ColumnName { get; }
@@ -104,7 +102,10 @@ namespace Shuttle.Core.Data.Boilerplate
 
         public string ColumnsClassName(string className)
         {
-            Guard.AgainstNullOrEmptyString(className, "className");
+            if (string.IsNullOrWhiteSpace(className))
+            {
+                throw new ArgumentNullException(nameof(className));
+            }
 
             var match = ColumnName.ToLower();
 
