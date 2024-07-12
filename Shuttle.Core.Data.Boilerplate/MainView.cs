@@ -69,14 +69,14 @@ public partial class MainView : Form
             {
                 connection.Open();
 
-                command.CommandText = "select TABLE_NAME from INFORMATION_SCHEMA.TABLES order by 1";
+                command.CommandText = "select TABLE_SCHEMA, TABLE_NAME from INFORMATION_SCHEMA.TABLES order by 1";
                 command.CommandType = System.Data.CommandType.Text;
 
                 await using (var reader = await command.ExecuteReaderAsync())
                 {
                     while(await reader.ReadAsync())
                     {
-                        _tables.Add(reader[0].ToString());
+                        _tables.Add($"{reader[0]}.{reader[1]}");
                     }
                 }
             }
@@ -460,12 +460,16 @@ public partial class MainView : Form
             return result;
         }
 
+        var pos = Table.Text.IndexOf(".", StringComparison.InvariantCultureIgnoreCase);
+        var tableSchema = pos > -1 ? Table.Text.Substring(0, pos) : "dbo";
+        var tableName = pos > -1 ? Table.Text.Substring(pos + 1) : Table.Text;
+
         await using (var connection = new SqlConnection(ConnectionString.Text))
         await using (var command = connection.CreateCommand())
         {
             connection.Open();
 
-            command.CommandText = $"select COLUMN_NAME, DATA_TYPE, IS_NULLABLE, ORDINAL_POSITION from  INFORMATION_SCHEMA.COLUMNS where TABLE_NAME = '{Table.Text}' order by ORDINAL_POSITION";
+            command.CommandText = $"select COLUMN_NAME, DATA_TYPE, IS_NULLABLE, ORDINAL_POSITION from  INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA = '{tableSchema}' and TABLE_NAME = '{tableName}' order by ORDINAL_POSITION";
             command.CommandType = System.Data.CommandType.Text;
 
             await using (var reader = await command.ExecuteReaderAsync())
