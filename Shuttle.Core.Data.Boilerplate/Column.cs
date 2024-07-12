@@ -1,25 +1,48 @@
 using System;
 using System.CodeDom;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Reflection;
+using System.Runtime.Versioning;
 using Microsoft.CSharp;
-using Shuttle.Core.Contract;
 
 namespace Shuttle.Core.Data.Boilerplate
 {
+    [SupportedOSPlatform("Windows")]
     public class Column
     {
+        private readonly Dictionary<DbType, Type> _dbTypeMap = new()
+        {
+            { System.Data.DbType.Binary, typeof(byte[])},
+            { System.Data.DbType.Boolean, typeof(bool)},
+            { System.Data.DbType.Byte, typeof(byte)},
+            { System.Data.DbType.DateTime, typeof(DateTime)},
+            { System.Data.DbType.DateTime2, typeof(DateTime)},
+            { System.Data.DbType.DateTimeOffset, typeof(DateTimeOffset)},
+            { System.Data.DbType.Decimal, typeof(decimal)},
+            { System.Data.DbType.Double, typeof(double)},
+            { System.Data.DbType.Guid, typeof(Guid)},
+            { System.Data.DbType.Int16, typeof(short)},
+            { System.Data.DbType.Int32, typeof(int)},
+            { System.Data.DbType.Int64, typeof(long)},
+            { System.Data.DbType.SByte, typeof(sbyte)},
+            { System.Data.DbType.Single, typeof(float)},
+            { System.Data.DbType.String, typeof(string)},
+            { System.Data.DbType.AnsiString, typeof(string)},
+            { System.Data.DbType.StringFixedLength, typeof(char)},
+            { System.Data.DbType.UInt16, typeof(ushort)},
+            { System.Data.DbType.UInt32, typeof(uint)},
+            { System.Data.DbType.UInt64, typeof(ulong)}
+        };
+
         private readonly string _dataType;
 
-        public Column(DataRow row)
+        public Column(string columnName, string dataType, bool isNullable, int ordinalPosition)
         {
-            Guard.AgainstNull(row, "row");
-
-            _dataType = Columns.DataType.MapFrom(row);
-            ColumnName = Columns.ColumnName.MapFrom(row);
-            IsNullable = Columns.IsNullable.MapFrom(row).Equals("YES", StringComparison.InvariantCultureIgnoreCase);
-            OrdinalPosition = Columns.OrdinalPosition.MapFrom(row);
+            _dataType = dataType;
+            ColumnName = columnName;
+            IsNullable = isNullable;
+            OrdinalPosition = ordinalPosition;
         }
 
         public string ColumnName { get; }
@@ -28,29 +51,7 @@ namespace Shuttle.Core.Data.Boilerplate
 
         public Type SystemType()
         {
-            var dbType = new SqlParameter("x", (SqlDbType) Enum.Parse(typeof(SqlDbType), _dataType, true)).DbType;
-
-            var metaClrType = Type.GetType(
-                "System.Data.SqlClient.MetaType, System.Data, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
-                true,
-                true
-            );
-
-            var metaType = metaClrType.InvokeMember(
-                "GetMetaTypeFromDbType",
-                BindingFlags.InvokeMethod | BindingFlags.Static | BindingFlags.NonPublic,
-                null,
-                null,
-                new object[] {dbType}
-            );
-
-            return (Type) metaClrType.InvokeMember(
-                "ClassType",
-                BindingFlags.GetField | BindingFlags.Instance | BindingFlags.NonPublic,
-                null,
-                metaType,
-                null
-            );
+            return _dbTypeMap[new SqlParameter("_", (SqlDbType)Enum.Parse(typeof(SqlDbType), _dataType, true)).DbType];
         }
 
         public string SystemTypeName()
@@ -101,7 +102,10 @@ namespace Shuttle.Core.Data.Boilerplate
 
         public string ColumnsClassName(string className)
         {
-            Guard.AgainstNullOrEmptyString(className, "className");
+            if (string.IsNullOrWhiteSpace(className))
+            {
+                throw new ArgumentNullException(nameof(className));
+            }
 
             var match = ColumnName.ToLower();
 
